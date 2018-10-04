@@ -6,24 +6,46 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btnPickImage"
+    <GridLayout
+        android:id="@+id/lytImagePickerButtons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:onClick="onPickImageClick"
-        android:text="Pick image"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:columnCount="2"
         app:layout_constraintBottom_toTopOf="@id/btnToggleScan"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/imgImage"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/btnPickImage200x200"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onPickImage200x200Click"
+            android:text="200x200" />
+
+        <Button
+            android:id="@+id/btnPickImage96x96"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onPickImage96x96Click"
+            android:text="96x96" />
+
+        <Button
+            android:id="@+id/btnPickImage48x48"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onPickImage48x48Click"
+            android:text="48x48" />
+
+    </GridLayout>
 
     <ToggleButton
         android:id="@+id/btnToggleScan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
         android:enabled="false"
         android:onClick="onScanClick"
@@ -33,31 +55,33 @@
         app:layout_constraintBottom_toTopOf="@id/lstBleDevices"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/imgImage"
-        app:layout_constraintTop_toBottomOf="@id/btnPickImage" />
+        app:layout_constraintTop_toBottomOf="@id/lytImagePickerButtons" />
 
     <ImageView
         android:id="@+id/imgImage"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:scaleType="fitXY"
-        android:layout_margin="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/image_border"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/btnPickImage"
+        android:scaleType="fitXY"
+        app:layout_constraintLeft_toRightOf="@id/lytImagePickerButtons"
         app:layout_constraintRight_toLeftOf="@id/imgImage2"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imgImage2"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:scaleType="fitXY"
-        android:layout_margin="16dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/image_border"
-        app:layout_constraintTop_toTopOf="parent"
+        android:scaleType="fitXY"
         app:layout_constraintLeft_toRightOf="@id/imgImage"
         app:layout_constraintRight_toRightOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
         android:id="@+id/lstBleDevices"

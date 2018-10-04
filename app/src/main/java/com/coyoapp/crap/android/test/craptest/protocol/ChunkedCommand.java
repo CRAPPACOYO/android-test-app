@@ -58,5 +58,4 @@ abstract class ChunkedCommand implements CrapCommand {
             return true;
         }
     }
-
 }

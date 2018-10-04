@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements CrapDeviceScanned
     private BluetoothAdapter bluetoothAdapter;
     private BleScanCallback scanCallback;
     private CrapDeviceListAdapter deviceListAdapter;
+    private Rect imageSize;
     private byte[] imageData;
 
     public void onScanClick(View view) {
@@ -64,16 +66,22 @@ public class MainActivity extends AppCompatActivity implements CrapDeviceScanned
         }
     }
 
-    public void onPickImageClick(View view) {
-        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-        pickIntent.setType("image/*");
-        startActivityForResult(pickIntent, ACTIVITY_REQUEST_PICK_IMAGE);
+    public void onPickImage48x48Click(View view) {
+        pickImage(48, 48);
+    }
+
+    public void onPickImage96x96Click(View view) {
+        pickImage(96, 96);
+    }
+
+    public void onPickImage200x200Click(View view) {
+        pickImage(200, 200);
     }
 
     @Override
     public void onDeviceScanned(CrapDevice crapDevice) {
         Log.w(TAG, format("device scanned: %s", crapDevice.getAddress()));
-        deviceListAdapter.add(crapDevice);
+        deviceListAdapter.addOrReplaceExisting(crapDevice);
     }
 
     @Override
@@ -114,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements CrapDeviceScanned
             CropImage.activity(data.getData())
                     .setAspectRatio(1, 1).setFixAspectRatio(true)
                     .setScaleType(CropImageView.ScaleType.FIT_CENTER)
-                    .setRequestedSize(200, 200, CropImageView.RequestSizeOptions.RESIZE_FIT)
+                    .setRequestedSize(imageSize.width(), imageSize.height(), CropImageView.RequestSizeOptions.RESIZE_FIT)
                     .start(this);
         }
         if ((requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) && (resultCode == Activity.RESULT_OK)) {
@@ -125,13 +133,20 @@ public class MainActivity extends AppCompatActivity implements CrapDeviceScanned
                 Bitmap image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
                 imgImage.setImageBitmap(image);
                 Bitmap imageBwr = ImageConverter.toBwr(image);
-                imageData = ImageConverter.uncompressed(imageBwr);
+                imageData = ImageConverter.uncompressed(imageBwr, new Rect(0, 0, imageSize.width(), imageSize.height()));
                 imgImage2.setImageBitmap(imageBwr);
                 btnToggleScan.setEnabled(true);
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG, "Unable to resolve image URI: " + imageUri, e);
             }
         }
+    }
+
+    private void pickImage(int width, int height) {
+        Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        pickIntent.setType("image/*");
+        imageSize = new Rect(0, 0, width, height);
+        startActivityForResult(pickIntent, ACTIVITY_REQUEST_PICK_IMAGE);
     }
 
     private void showMissingPermissionsDialog() {
@@ -181,11 +196,10 @@ public class MainActivity extends AppCompatActivity implements CrapDeviceScanned
             return view;
         }
 
-        @Override
-        public void add(@Nullable CrapDevice crapDevice) {
+        void addOrReplaceExisting(@Nullable CrapDevice crapDevice) {
             int position = crapDevices.indexOf(crapDevice);
             if (position < 0) {
-                super.add(crapDevice);
+                add(crapDevice);
             } else {
                 crapDevices.remove(position);
                 crapDevices.add(position, crapDevice);
