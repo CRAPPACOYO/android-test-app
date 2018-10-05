@@ -8,7 +8,6 @@ import static java.lang.String.format;
 
 abstract class ChunkedCommand implements CrapCommand {
 
-    private static final String TAG = "ChunkedCommand";
     private static final int MAX_CHUNK_SIZE = 20;
 
     private byte[] buffer;
@@ -36,23 +35,22 @@ abstract class ChunkedCommand implements CrapCommand {
                 ",pos:" + position + "]";
     }
 
-    protected String getTag() {
-        return TAG;
-    }
+    abstract protected String getTag();
+
+    abstract protected BluetoothGattCharacteristic getCharacteristic(BluetoothGatt gatt);
 
     private boolean sendNextChunk(BluetoothGatt gatt) {
         int remaining = buffer.length - position;
-        Log.d(getTag(), format("sendNextChunk - remaining %d", remaining));
+        Log.d(getTag(), format("Sending next chunk - remaining bytes: %d", remaining));
         if (remaining > 0) {
             int len = Math.min(remaining, MAX_CHUNK_SIZE);
             byte[] sendBuf = new byte[len];
             System.arraycopy(buffer, position, sendBuf, 0, len);
-            BluetoothGattCharacteristic imageChar = gatt
-                    .getService(CrapProtocol.CRAP_SERVICE_UUID)
-                    .getCharacteristic(CrapProtocol.IMAGE_CHAR_UUID);
-            imageChar.setValue(sendBuf);
+            BluetoothGattCharacteristic characteristic = getCharacteristic(gatt);
+            characteristic.setValue(sendBuf);
+            //characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
             position += len;
-            gatt.writeCharacteristic(imageChar);
+            gatt.writeCharacteristic(characteristic);
             return false;
         } else {
             return true;
