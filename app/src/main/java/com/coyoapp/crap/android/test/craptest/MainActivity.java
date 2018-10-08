@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements CrapDeviceScanned
         List<CrapDevice> scannedDevices = new ArrayList<>();
         deviceListAdapter = new CrapDeviceListAdapter(this, scannedDevices);
         ListView lstBleDevices = findViewById(R.id.lstBleDevices);
+        lstBleDevices.setEmptyView(findViewById(R.id.txtEmptyDevicesList));
         lstBleDevices.setAdapter(deviceListAdapter);
     }
 
