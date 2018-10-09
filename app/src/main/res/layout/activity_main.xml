@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:columnCount="2"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/imgImage"
@@ -22,21 +23,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onPickImage200x200Click"
-            android:text="200x200" />
+            android:text="@string/main_pick_image_200x200" />
 
         <Button
             android:id="@+id/btnPickImage96x96"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onPickImage96x96Click"
-            android:text="96x96" />
+            android:text="@string/main_pick_image_96x96" />
 
         <Button
             android:id="@+id/btnPickImage48x48"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onPickImage48x48Click"
-            android:text="48x48" />
+            android:text="@string/main_pick_image_48x48" />
 
     </GridLayout>
 
@@ -44,13 +45,12 @@
         android:id="@+id/btnToggleScan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:enabled="false"
         android:onClick="onScanClick"
-        android:text="ToggleButton"
-        android:textOff="Start Scan"
-        android:textOn="Stop Scan"
+        android:textOff="@string/main_scan_start"
+        android:textOn="@string/main_scan_stop"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/lytImagePickerButtons" />
 
@@ -58,24 +58,28 @@
         android:id="@+id/imgImage"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="4dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/image_border"
         android:scaleType="fitXY"
+        android:onClick="onImagePickerSettingsClick"
+        android:contentDescription="@string/main_picked_image_description"
         app:layout_constraintLeft_toRightOf="@id/lytImagePickerButtons"
-        app:layout_constraintRight_toLeftOf="@id/imgImage2"
+        app:layout_constraintRight_toLeftOf="@id/imgImageReducedColors"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imgImage2"
+        android:id="@+id/imgImageReducedColors"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/image_border"
         android:scaleType="fitXY"
+        android:onClick="onImagePickerSettingsClick"
+        android:contentDescription="@string/main_reduced_color_image_description"
         app:layout_constraintLeft_toRightOf="@id/imgImage"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -105,7 +109,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:gravity="center_horizontal"
-        android:text="No CRAP devices found"
+        android:text="@string/main_device_list_no_entries"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

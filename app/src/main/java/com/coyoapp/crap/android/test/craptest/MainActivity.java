@@ -38,7 +38,8 @@ import java.util.List;
 
 import static java.lang.String.format;
 
-public class MainActivity extends AppCompatActivity implements CrapDeviceScannedListener {
+public class MainActivity extends AppCompatActivity implements CrapDeviceScannedListener,
+        ColorConversionSettingsDialog.ColorConversionSettingsChangedListener {
 
     private static final String TAG = "MainActivity";
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
@@ -46,8 +47,10 @@ public class MainActivity extends AppCompatActivity implements CrapDeviceScanned
     private static final ScanSettings BLE_SCAN_SETTINGS = new ScanSettings.Builder().build();
 
     private ToggleButton btnToggleScan;
+    private Bitmap pickedImage;
     private ImageView imgImage;
-    private ImageView imgImage2;
+    private ImageView imgImageReducedColors;
+    private ImageConverter.BwrConversionParameters conversionParameters = new ImageConverter.BwrConversionParameters();
     private BluetoothAdapter bluetoothAdapter;
     private BleScanCallback scanCallback;
     private CrapDeviceListAdapter deviceListAdapter;
@@ -78,6 +81,14 @@ public class MainActivity extends AppCompatActivity implements CrapDeviceScanned
         pickImage(200, 200);
     }
 
+    public void onImagePickerSettingsClick(View view) {
+        if (pickedImage != null) {
+            ColorConversionSettingsDialog.newInstance(pickedImage, conversionParameters )
+                    .withChangedListener(this)
+                    .show(getSupportFragmentManager(), null);
+        }
+    }
+
     @Override
     public void onDeviceScanned(CrapDevice crapDevice) {
         Log.w(TAG, format("device scanned: %s", crapDevice.getAddress()));
@@ -99,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements CrapDeviceScanned
         setContentView(R.layout.activity_main);
         btnToggleScan = findViewById(R.id.btnToggleScan);
         imgImage = findViewById(R.id.imgImage);
-        imgImage2 = findViewById(R.id.imgImage2);
+        imgImageReducedColors = findViewById(R.id.imgImageReducedColors);
         List<CrapDevice> scannedDevices = new ArrayList<>();
         deviceListAdapter = new CrapDeviceListAdapter(this, scannedDevices);
         ListView lstBleDevices = findViewById(R.id.lstBleDevices);
@@ -131,16 +142,26 @@ public class MainActivity extends AppCompatActivity implements CrapDeviceScanned
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             Uri imageUri = result.getUri();
             try {
-                Bitmap image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-                imgImage.setImageBitmap(image);
-                Bitmap imageBwr = ImageConverter.toBwr(image);
-                imageData = ImageConverter.uncompressed(imageBwr, new Rect(0, 0, imageSize.width(), imageSize.height()));
-                imgImage2.setImageBitmap(imageBwr);
+                pickedImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                imgImage.setImageBitmap(pickedImage);
+                convertImage();
                 btnToggleScan.setEnabled(true);
             } catch (IOException e) {
                 Log.e(TAG, "Unable to resolve image URI: " + imageUri, e);
             }
         }
+    }
+
+    @Override
+    public void onColorConversionSettingsChanged(ImageConverter.BwrConversionParameters parameters) {
+        conversionParameters = parameters;
+        convertImage();
+    }
+
+    private void convertImage() {
+        Bitmap imageBwr = ImageConverter.toBwr(pickedImage, conversionParameters);
+        imgImageReducedColors.setImageBitmap(imageBwr);
+        imageData = ImageConverter.uncompressed(imageBwr, new Rect(0, 0, imageSize.width(), imageSize.height()));
     }
 
     private void pickImage(int width, int height) {

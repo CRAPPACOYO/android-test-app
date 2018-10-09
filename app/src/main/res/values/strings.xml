@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">CRAP Test</string>
+    <string name="cancel">Cancel</string>
+    <string name="apply">Apply</string>
+
+    <!-- main-->
+    <string name="main_pick_image_200x200">200x200</string>
+    <string name="main_pick_image_96x96">96x96</string>
+    <string name="main_pick_image_48x48">48x48</string>
+    <string name="main_scan_start">Start scan</string>
+    <string name="main_scan_stop">Stop scan</string>
+    <string name="main_picked_image_description">Picked image</string>
+    <string name="main_reduced_color_image_description">Picked image with reduced color set for transfer</string>
+    <string name="main_device_list_no_entries">No CRAP devices found</string>
+
+    <!-- color conversion settings dialog -->
+    <string name="color_conversion_settings_title">Color conversion settings</string>
+    <string name="color_conversion_settings_cancel">@string/cancel</string>
+    <string name="color_conversion_settings_apply">@string/apply</string>
+    <string name="color_conversion_settings_threshold_black_caption">Threshold black</string>
+    <string name="color_conversion_settings_threshold_red_caption">Threshold red</string>
+    <string name="color_conversion_settings_hue_angle_red_caption">Hue angle red</string>
 </resources>

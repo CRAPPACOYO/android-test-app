@@ -6,17 +6,26 @@ import android.graphics.Rect;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Size;
 
+import java.io.Serializable;
+
 public class ImageConverter {
 
     private static float[] hsv = new float[3];
 
-    public static Bitmap toBwr(Bitmap source) {
+    public static class BwrConversionParameters implements Serializable {
+
+        public float thresholdBlack = 0.4f;
+        public float thresholdRed = 0.6f;
+        public int hueAngleRed = 60;
+    }
+
+    public static Bitmap toBwr(Bitmap source, BwrConversionParameters conversionParameters) {
         @ColorInt int[] row = new int[source.getWidth()];
         Bitmap result = Bitmap.createBitmap(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
         for (int y = 0; y < source.getHeight(); y++) {
             source.getPixels(row, 0, source.getWidth(), 0, y, source.getWidth(), 1);
             for (int x = 0; x < source.getWidth(); x++) {
-                row[x] = toBwr(row[x]);
+                row[x] = toBwr(row[x], conversionParameters);
             }
             result.setPixels(row, 0, source.getWidth(), 0, y, source.getWidth(), 1);
         }
@@ -83,10 +92,12 @@ public class ImageConverter {
     }
 
     @ColorInt
-    private static int toBwr(@ColorInt int color) {
+    private static int toBwr(@ColorInt int color, BwrConversionParameters conversionParameters) {
         Color.colorToHSV(color, hsv);
-        boolean isRed = ((hsv[0] < 30) || (hsv[0] > 330)) && (hsv[1] > 0.6);
-        boolean isBlack = hsv[2] < 0.4;
+        int hueAngleRedHalf = conversionParameters.hueAngleRed / 2;
+        boolean isRed = ((hsv[0] < hueAngleRedHalf) || (hsv[0] > (360 - hueAngleRedHalf)))
+                && (hsv[1] > conversionParameters.thresholdRed);
+        boolean isBlack = hsv[2] < conversionParameters.thresholdBlack;
         return isBlack ? Color.BLACK : (isRed ? Color.RED : Color.WHITE);
     }
 }
