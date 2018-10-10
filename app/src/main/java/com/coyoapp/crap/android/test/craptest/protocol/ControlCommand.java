@@ -10,6 +10,7 @@ public class ControlCommand implements CrapCommand {
 
     private static final String TAG = "ControlCommand";
     private static final byte CLEAR = 1;
+    private static final byte UPDATE = 2;
 
     private final byte cmdCode;
 
@@ -19,6 +20,10 @@ public class ControlCommand implements CrapCommand {
 
     public static ControlCommand clear() {
         return new ControlCommand(CLEAR);
+    }
+
+    public static ControlCommand update() {
+        return new ControlCommand(UPDATE);
     }
 
     @Override

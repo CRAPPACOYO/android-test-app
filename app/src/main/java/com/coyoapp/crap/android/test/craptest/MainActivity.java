@@ -236,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements CrapDeviceScanned
             onScanClick(btnToggleScan);
             crapDevice.clear();
             crapDevice.image(imageData);
+            crapDevice.update();
         }
 
         private void purgeItemsOlderThan(long threshold) {

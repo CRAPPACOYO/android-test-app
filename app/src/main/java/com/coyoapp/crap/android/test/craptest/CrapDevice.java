@@ -41,6 +41,10 @@ public class CrapDevice {
         crapProtocol.queue(ControlCommand.clear(), device, context);
     }
 
+    public void update() {
+        crapProtocol.queue(ControlCommand.update(), device, context);
+    }
+
     public void image(byte[] imageData) {
         crapProtocol.queue(ImageCommand.image(imageData), device, context);
     }

@@ -85,7 +85,7 @@ public class ImageConverter {
 
     private static byte getByteFrom8Pixels(@ColorInt @Size(8) int[] px, @ColorInt int cmpColor) {
         int v = 0;
-        for (int pxp = 0; pxp < 7; pxp++) {
+        for (int pxp = 0; pxp < 8; pxp++) {
             v = (v << 1) | (px[pxp] == cmpColor ? 1 : 0);
         }
         return (byte) v;
